@@ -7,8 +7,10 @@ output:
     toc: true
 vignette: >
   %\VignetteIndexEntry{piecewiseSEM}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 Structural equation modeling (SEM) is among the fastest growing statistical techniques in ecology and evolution, and provides a new way to explore and quantify ecological systems. SEM unites multiple variables in a single causal network, thereby allowing simultaneous tests of multiple hypotheses. The idea of causality is central to SEM as the technique implicitly assumes that the relationships among variables represent causal links. Because variables can be both predictors and responses, SEM is also a useful tool for quantifying both direct and indirect (cascading) effects.
@@ -76,13 +78,18 @@ And we will use `piecewiseSEM` to fit the model. The primary function is `psem` 
 # Load required libraries
 library(piecewiseSEM)
 
-model <- psem(lm(y1 ~ x1, dat), lm(y1 ~ y2, dat), lm(y2 ~ x1, dat), lm(y3 ~ y1, dat))
+model <- psem(lm(y1 ~ x1, dat), 
+              lm(y1 ~ y2, dat), 
+              lm(y2 ~ x1, dat), 
+              lm(y3 ~ y1, dat))
 ```
 
 You'll note that this formulation produces an error because we have incorrectly broken down the component regressions. A common mistake is to list each path separately, but the proper specification is to collapse multiple pathways into a single multiple regression if the response is the same. Thus, the properly specified SEM becomes:
 
 ```{r}
-model <- psem(lm(y1 ~ x1 + y2, dat), lm(y2 ~ x1, dat), lm(y3 ~ y1, dat))
+model <- psem(lm(y1 ~ x1 + y2, dat), 
+              lm(y2 ~ x1, dat), 
+              lm(y3 ~ y1, dat))
 ```
 
 To evaluate the model, we call `summary` on the `psem` object.
